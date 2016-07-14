@@ -1,0 +1,54 @@
+{
+  "name": "generator-z2p",
+  "version": "0.0.0",
+  "description": "Creates a full travis-ci build/publish/deploy pipeline and depolys to google container engine",
+  "homepage": "www.github.com/funkymonkeymonk/generator-z2p",
+  "author": {
+    "name": "Will Weaver",
+    "email": "monkey@buildingbananas.com",
+    "url": "www.buildingbananas.com"
+  },
+  "files": [
+    "generators"
+  ],
+  "main": "generators/index.js",
+  "keywords": [
+    "travis-ci",
+    "kubernetes",
+    "container",
+    "deploy",
+    "docker",
+    "yeoman-generator"
+  ],
+  "dependencies": {
+    "yeoman-generator": "^0.23.0"
+  },
+  "devDependencies": {
+    "yeoman-test": "^1.0.0",
+    "yeoman-assert": "^2.0.0",
+    "eslint": "^2.1.0",
+    "eslint-config-xo-space": "^0.13.0",
+    "gulp": "^3.9.0",
+    "gulp-eslint": "^2.0.0",
+    "gulp-exclude-gitignore": "^1.0.0",
+    "gulp-line-ending-corrector": "^1.0.1",
+    "gulp-istanbul": "^0.10.3",
+    "gulp-mocha": "^2.0.0",
+    "gulp-plumber": "^1.0.0",
+    "gulp-nsp": "^2.1.0",
+    "gulp-coveralls": "^0.1.0"
+  },
+  "eslintConfig": {
+    "extends": "xo-space",
+    "env": {
+      "mocha": true
+    }
+  },
+  "repository": "funkymonkeymonk/generator-z2p",
+  "scripts": {
+    "prepublish": "gulp prepublish",
+    "test": "gulp",
+    "test-debug":"node-debug gulp"
+  },
+  "license": "MIT"
+}

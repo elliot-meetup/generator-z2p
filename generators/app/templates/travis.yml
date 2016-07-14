@@ -1,0 +1,40 @@
+sudo: required
+language: bash
+
+# Only build pushes to master.
+branches:
+  only:
+    - master
+
+services:
+  - docker
+
+env:
+  global:
+    - CI_BUILD_NUMBER=$TRAVIS_BUILD_NUMBER
+    - CLOUDSDK_CORE_DISABLE_PROMPTS=1
+
+before_install:
+  # Install gcloud
+  - rm -rf ${HOME}/google-cloud-sdk
+  - curl https://sdk.cloud.google.com | bash;
+  - export PATH=${HOME}/google-cloud-sdk/bin:$PATH
+  - gcloud components install kubectl
+
+  # Get those secrets out
+  - echo $GCP_SECRET > client-secret.json
+  - gcloud auth activate-service-account --key-file client-secret.json
+
+  - export PR=https://api.github.com/repos/$TRAVIS_REPO_SLUG/pulls/$TRAVIS_PULL_REQUEST
+  - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo `curl --user "$GITHUB_USER:$GITHUB_PASS" -s $PR | jq -r .head.ref`; fi)
+  - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, PR=$PR, BRANCH=$BRANCH"
+
+  - export CI_BUILD_NUMBER=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $CI_BUILD_NUMBER; else echo "${TRAVIS_BUILD_NUMBER}-${BRANCH}"; fi)
+  - echo "CI_BUILD_NUMBER=${CI_BUILD_NUMBER}"
+
+  # Login to mup.cr
+  - docker login --email not@val.id --username $DOCKER_USER --password $DOCKER_PASS mup.cr
+
+script:
+  - make publish
+  - 'if [ "${TRAVIS_PULL_REQUEST}" = "false" ] && [ "${TRAVIS_BRANCH}" = "master" ]; then make deploy-stage; fi'
