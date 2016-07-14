@@ -26,9 +26,9 @@ module.exports = yeoman.Base.extend({
   writing: function () {
     var destinations = [
       { src: 'travis.yml', dest: '.travis.yml'},
-      `infra/${this.props.namespaceName}-ns.yaml`,
-      `infra/${this.props.projectName}-dply.yaml`,
-      `infra/${this.props.projectName}-svc.yaml`,
+      { src: 'infra/ns.yml', dest: `infra/${this.props.namespaceName}-ns.yml`},
+      { src: 'infra/dply.yml', dest: `infra/${this.props.projectName}-dply.yml`},
+      { src: 'infra/svc.yml', dest: `infra/${this.props.projectName}-svc.yml`},
       'Makefile',
       'Dockerfile',
       { src: 'dockerignore', dest:'.dockerignore'},
@@ -38,18 +38,26 @@ module.exports = yeoman.Base.extend({
 
     destinations.forEach(item => {
       if( typeof item === 'string'){
-        this.fs.copy(
-          this.templatePath('example-ns.yaml'),
-          this.destinationPath(item)
+        this.fs.copyTpl(
+          this.templatePath(item),
+          this.destinationPath(item),
+          this.props
         );
       } else {
-        this.fs.copy(
+        this.fs.copyTpl(
           this.templatePath(item.src),
-          this.destinationPath(item.dest)
+          this.destinationPath(item.dest),
+          this.props
         );
       }
     });
   },
+
+  // git: function () {
+  //   this.composeWith('git-init', {}, {
+  //     local: require.resolve('generator-git-init')
+  //   });
+  // },
 
   install: function () {
     // this.log('Horray your new project is created.');
