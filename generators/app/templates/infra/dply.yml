@@ -11,5 +11,5 @@ spec:
         app: <%= projectName %>
     spec:
       containers:
-      - name: example
-        image: nginx:stable
+      - name: <%= projectName %>
+        image: mup.cr/<%= namespaceName %>/<%= projectName %>:{{BUILD_NUMBER}}

@@ -16,10 +16,31 @@ module.exports = yeoman.Base.extend({
       name: 'namespaceName',
       message: 'What namespace do you want it to run in?',
       default: 'mynamespace'
+    }, {
+      type: 'input',
+      name: 'stageCluster',
+      message: 'What cluster will the project be staged in?',
+      default: 'blt-stage'
+    }, {
+      type: 'input',
+      name: 'stageZone',
+      message: 'What namespace do you want it to run in?',
+      default: 'asia-east1-c'
+    }, {
+      type: 'input',
+      name: 'prodCluster',
+      message: 'What cluster will the project be deployed in?',
+      default: 'blt-prod'
+    }, {
+      type: 'input',
+      name: 'prodZone',
+      message: 'What namespace do you want it to run in?',
+      default: 'us-east1-b'
     }];
 
     return this.prompt(prompts).then(function (props) {
       this.props = props;
+      this.props.imageName = `mup.cr/${props.namespaceName}/${props.projectName}`
     }.bind(this));
   },
 
@@ -53,11 +74,13 @@ module.exports = yeoman.Base.extend({
     });
   },
 
-  // git: function () {
-  //   this.composeWith('git-init', {}, {
-  //     local: require.resolve('generator-git-init')
-  //   });
-  // },
+  git: function () {
+    this.composeWith('git-init', {
+      options: { commit: 'Commit from z2p' }
+    }, {
+      local: require.resolve('generator-git-init')
+    });
+  },
 
   install: function () {
     // this.log('Horray your new project is created.');

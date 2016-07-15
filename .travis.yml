@@ -5,3 +5,10 @@ node_js:
   - v4
   - '0.12'
   - '0.10'
+
+before_script:
+  - 'git config --global user.email "monkey@buildingbananas.com"'
+  - 'git config --global user.name "Will Weaver"'
+
+script:
+  - npm test
