@@ -24,7 +24,7 @@ module.exports = yeoman.Base.extend({
     }, {
       type: 'input',
       name: 'stageZone',
-      message: 'What namespace do you want it to run in?',
+      message: 'What zone is the staging cluster in?',
       default: 'asia-east1-c'
     }, {
       type: 'input',
@@ -34,8 +34,13 @@ module.exports = yeoman.Base.extend({
     }, {
       type: 'input',
       name: 'prodZone',
-      message: 'What namespace do you want it to run in?',
+      message: 'What zone is the production cluester in?',
       default: 'us-east1-b'
+    }, {
+      type: 'input',
+      name: 'githubToken',
+      message: 'What is your github token? (Generate one from https://github.com/settings/tokens)',
+      default: 'fakeToken'
     }];
 
     return this.prompt(prompts).then(function (props) {
@@ -74,12 +79,27 @@ module.exports = yeoman.Base.extend({
     });
   },
 
-  git: function () {
-    this.composeWith('git-init', {
-      options: { commit: 'Commit from z2p' }
-    }, {
-      local: require.resolve('generator-git-init')
-    });
+  gitPush: function () {
+    if (this.props.githubToken != 'fakeToken') {
+      var GitHubApi = require('github');
+      var github = new GitHubApi();
+
+      github.authenticate({
+        type: "oauth",
+        token: this.props.githubToken,
+      });
+
+      github.repos.create({
+        name: this.props.projectName,
+      });
+
+      require('simple-git')(this.destinationRoot())
+         .init()
+         .add('./*')
+         .commit('Commit from z2p')
+         .addRemote('origin', `git@github.com:funkymonkeymonk/${this.props.projectName}.git`)
+        //  .push('origin', 'master');
+    }
   },
 
   install: function () {

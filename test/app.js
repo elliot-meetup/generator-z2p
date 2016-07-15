@@ -18,6 +18,7 @@ describe('generator-z2p:app', function () {
   var stageZone = 'test-east1-c'
   var prodCluster = 'test-prod'
   var prodZone = 'test-east1-b'
+  var githubToken = 'fakeToken'
 
   before(function () {
     return helpers.run(path.join(__dirname, '../generators/app'))
@@ -27,7 +28,8 @@ describe('generator-z2p:app', function () {
       stageCluster,
       stageZone,
       prodCluster,
-      prodZone
+      prodZone,
+      githubToken
     })
     .toPromise();
   });
@@ -93,5 +95,4 @@ describe('generator-z2p:app', function () {
       })
     })
   })
-
 });
